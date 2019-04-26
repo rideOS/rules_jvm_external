@@ -507,9 +507,12 @@ def _coursier_fetch_impl(repository_ctx):
         repository_ctx.file("exclusion-file.txt", "\n".join(exclusion_lines), False)
         cmd.extend(["--local-exclude-file", "exclusion-file.txt"])
     for repository in repositories:
-        cmd.extend(["--repository", utils.repo_url(repository)])
+        cmd.extend(["--repository", repository["repo_url"]])
     for a in excluded_artifacts:
         cmd.extend(["--exclude", ":".join([a["group"], a["artifact"]])])
+    for repository in repositories:
+        if "credentials" in repository:
+            cmd.extend(["--credentials", utils.repo_credentials(repository)])
     if not repository_ctx.attr.use_unsafe_shared_cache:
         cmd.extend(["--cache", "v1"])  # Download into $output_base/external/$maven_repo_name/v1
     if repository_ctx.attr.fetch_sources:
