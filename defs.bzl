@@ -22,7 +22,8 @@ def maven_install(
         repositories = [],
         artifacts = [],
         fetch_sources = False,
-        use_unsafe_shared_cache = False):
+        use_unsafe_shared_cache = False,
+        exclude = []):
 
     repositories_json_strings = []
     for repository in parse.parse_repository_spec_list(repositories):
@@ -32,12 +33,17 @@ def maven_install(
     for artifact in parse.parse_artifact_spec_list(artifacts):
         artifacts_json_strings.append(json.write_artifact_spec(artifact))
 
+    excluded_artifacts_json_strings = []
+    for exclusion in parse.parse_exclusion_spec_list(exclude):
+        excluded_artifacts_json_strings.append(json.write_exclusion_spec(exclusion))
+
     coursier_fetch(
         name = name,
         repositories = repositories_json_strings,
         artifacts = artifacts_json_strings,
         fetch_sources = fetch_sources,
         use_unsafe_shared_cache = use_unsafe_shared_cache,
+        exclude = excluded_artifacts_json_strings,
     )
 
 def artifact(a, repository_name = DEFAULT_REPOSITORY_NAME):

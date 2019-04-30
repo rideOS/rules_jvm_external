@@ -53,6 +53,10 @@ maven_install(
     ],
     # Fetch srcjars. Defaults to False.
     fetch_sources = True,
+    # Exclude packages from being pulled in by automatic dependency resolution
+    exclude = [
+        "com.google.guava:guava",
+    ],
 )
 ```
 
